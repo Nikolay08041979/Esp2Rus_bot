@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.log
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# Data
+*.sqlite3
+*.db
+*.bak
+*.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PyCharm project settings
+*.iml
