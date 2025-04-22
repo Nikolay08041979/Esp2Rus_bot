@@ -16,6 +16,9 @@ env/
 *.db
 *.bak
 *.json
+*.csv
+*.xlsx
+*.zip
 
 # IDE
 .vscode/
@@ -28,3 +31,4 @@ Thumbs.db
 
 # PyCharm project settings
 *.iml
+
