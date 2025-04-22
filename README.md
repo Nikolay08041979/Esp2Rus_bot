@@ -1,3 +1,7 @@
+![CI Status](https://github.com/Nikolay08041979/Esp2Rus_bot/actions/workflows/python-app.yml/badge.svg)
+![Deploy Status](https://github.com/Nikolay08041979/Esp2Rus_bot/actions/workflows/deploy.yml/badge.svg)
+
+
 # 🇪🇸 Esp2Ru_bot — Telegram-бот для изучения испанского
 
 ## Общее описание проекта
