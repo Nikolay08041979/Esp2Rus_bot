@@ -23,6 +23,7 @@ async def main():
     # Команды бота
     await bot.set_my_commands([
         BotCommand(command="start", description="Начать тренировку"),
+        BotCommand(command="cancel", description="Остановить текущую операцию"),
         BotCommand(command="help", description="Помощь по боту")
     ])
 

@@ -21,9 +21,12 @@ def quiz_options_keyboard(options: list[str]) -> ReplyKeyboardMarkup:
     )
 
 start_over_keyboard = ReplyKeyboardMarkup(
-    keyboard=[[KeyboardButton(text="Начать заново /start")]],
+    keyboard=[
+        [KeyboardButton(text="/start")]
+    ],
     resize_keyboard=True
 )
+
 
 # --- Inline Keyboards (если появятся) ---
 

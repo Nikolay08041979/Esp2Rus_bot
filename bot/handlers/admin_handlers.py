@@ -1,7 +1,16 @@
 from aiogram import Router, types, F, Bot
-from aiogram.filters import Command
+from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
+
+
+from aiogram.fsm.state import State, StatesGroup
+
+class AdminState(StatesGroup):
+    awaiting_new_category = State()
+    awaiting_delete_category = State()
+    awaiting_new_level = State()
+    awaiting_delete_level = State()
 
 from core.config import ADMIN_IDS, DB
 from db.models import (
@@ -26,7 +35,6 @@ def admin_menu_keyboard():
         [InlineKeyboardButton(text="📈 Статистика по уровням", callback_data="admin_stats_levels")],
         [InlineKeyboardButton(text="➕ Добавить категорию", callback_data="admin_add_category")],
         [InlineKeyboardButton(text="🗑 Удалить категорию", callback_data="admin_delete_category")],
-        [InlineKeyboardButton(text="📋 Посмотреть уровни", callback_data="admin_list_levels")],
         [InlineKeyboardButton(text="➕ Добавить уровень", callback_data="admin_add_level")],
         [InlineKeyboardButton(text="🗑 Удалить уровень", callback_data="admin_delete_level")],
     ])
@@ -56,7 +64,7 @@ async def handle_csv_upload(message: Message, bot: Bot, state: FSMContext):
 
     json_path = "data/words.json"
     convert_csv_to_json(file_path, json_path)
-    result = await import_words_from_json(json_path, DB)
+    result = import_words_from_json(json_path, DB)
 
     await message.answer(
         f"✅ Файл обработан.\n"
@@ -82,7 +90,7 @@ async def prompt_add_category(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("Введите название новой категории:")
     await state.set_state("awaiting_new_category")
 
-@router.message(F.text, state="awaiting_new_category")
+@router.message(AdminState.awaiting_new_category)
 async def receive_new_category(message: Message, state: FSMContext):
     result = await add_category(message.text)
     await message.answer(result)
@@ -93,7 +101,7 @@ async def prompt_delete_category(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("Введите название категории, которую хотите удалить:")
     await state.set_state("awaiting_delete_category")
 
-@router.message(F.text, state="awaiting_delete_category")
+@router.message(AdminState.awaiting_delete_category)
 async def receive_category_to_delete(message: Message, state: FSMContext):
     result = await delete_category(message.text)
     await message.answer(result)
@@ -104,7 +112,7 @@ async def prompt_add_level(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("Введите название нового уровня:")
     await state.set_state("awaiting_new_level")
 
-@router.message(F.text, state="awaiting_new_level")
+@router.message(AdminState.awaiting_new_level)
 async def receive_new_level(message: Message, state: FSMContext):
     result = await add_level(message.text)
     await message.answer(result)
@@ -115,7 +123,7 @@ async def prompt_delete_level(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("Введите название уровня, который нужно удалить:")
     await state.set_state("awaiting_delete_level")
 
-@router.message(F.text, state="awaiting_delete_level")
+@router.message(AdminState.awaiting_delete_level)
 async def receive_level_to_delete(message: Message, state: FSMContext):
     result = await delete_level(message.text)
     await message.answer(result)
@@ -125,3 +133,9 @@ async def receive_level_to_delete(message: Message, state: FSMContext):
 async def list_all_levels(callback: CallbackQuery):
     levels = await get_all_levels_text()
     await callback.message.answer("📋 Список уровней:" + "\n".join(levels))
+
+@router.message(Command("cancel"))
+async def cancel_command(message: Message, state: FSMContext):
+    """Обработчик команды /cancel — сбрасывает состояние FSM и возвращает к стартовому экрану"""
+    await state.clear()
+    await message.answer("❌ Действие отменено. Чтобы начать заново, нажмите /start")

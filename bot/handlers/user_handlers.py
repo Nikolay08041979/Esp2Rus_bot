@@ -1,135 +1,158 @@
-from aiogram import Router, types, F
-from aiogram.filters import CommandStart
+from aiogram import Router, types, F, Bot
+from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
+from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
+import time
+
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-import random
 
-from db.models import get_all_categories, get_all_levels, get_words_for_quiz
-from bot.keyboards import category_keyboard, level_keyboard, quiz_options_keyboard, start_over_keyboard
+from bot.keyboards import category_keyboard
 
-# FSM состояния
-class QuizState(StatesGroup):
-    choosing_category = State()
-    choosing_level = State()
-    choosing_quantity = State()
-    quiz_in_progress = State()
+
+class AdminState(StatesGroup):
+    awaiting_new_category = State()
+    awaiting_delete_category = State()
+    awaiting_new_level = State()
+    awaiting_delete_level = State()
+
+from core.config import ADMIN_IDS, DB
+from db.models import (
+    get_category_stats,
+    get_level_stats,
+    add_category,
+    delete_category,
+    add_level,
+    delete_level,
+    get_all_levels_text, get_all_categories,
+)
+from db.importer import import_words_from_json
+from core.converter import convert_csv_to_json
+
+import os
 
 router = Router()
 
-@router.message(CommandStart())
-async def cmd_start(message: types.Message, state: FSMContext):
+def admin_menu_keyboard():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📊 Статистика по категориям", callback_data="admin_stats")],
+        [InlineKeyboardButton(text="📈 Статистика по уровням", callback_data="admin_stats_levels")],
+        [InlineKeyboardButton(text="➕ Добавить категорию", callback_data="admin_add_category")],
+        [InlineKeyboardButton(text="🗑 Удалить категорию", callback_data="admin_delete_category")],
+        [InlineKeyboardButton(text="➕ Добавить уровень", callback_data="admin_add_level")],
+        [InlineKeyboardButton(text="🗑 Удалить уровень", callback_data="admin_delete_level")],
+    ])
+
+# 📎 Обработка CSV-файла.
+# ВАЖНО: этот хендлер должен быть выше всех F.text/F.any — иначе не сработает!
+@router.message(F.document)
+async def handle_csv_upload(message: Message, bot: Bot, state: FSMContext):
+    if message.from_user.id not in ADMIN_IDS:
+        await message.answer("⛔ У вас нет прав администратора.")
+        return
+
+    if not message.document.file_name.endswith(".csv"):
+        await message.answer("⚠️ Пожалуйста, отправьте файл с расширением .csv")
+        return
+
+    os.makedirs("data/uploads", exist_ok=True)
+    file_path = f"data/uploads/{message.document.file_name}"
+    file = await bot.get_file(message.document.file_id)
+    await bot.download_file(file.file_path, destination=file_path)
+
+    json_path = f"data/uploads/{int(time.time())}_{message.document.file_name}.json"
+    convert_csv_to_json(file_path, json_path)
+    result = import_words_from_json(json_path, DB)
+
+    await message.answer(
+        f"✅ Файл обработан.\n"
+        f"Добавлено: {result['added']}\n"
+        f"Пропущено (дубликаты): {len(result['duplicates'])}\n"
+        f"Ошибки: {len(result['errors'])}"
+    )
+
+@router.message(Command("admin"))
+@router.message(F.text.lower() == "/admin")
+async def admin_entry(message: Message):
+    if message.from_user.id not in ADMIN_IDS:
+        await message.answer("⛔ У вас нет прав администратора.")
+        return
+    await message.answer("🔧 Добро пожаловать в админ-панель:", reply_markup=admin_menu_keyboard())
+
+@router.callback_query(F.data == "admin_stats")
+async def show_stats(callback: CallbackQuery):
+    stats = await get_category_stats()
+    lines = [f"{r['категория']}: {r['количество_слов']}" for r in stats]
+    await callback.message.answer("📊 Кол-во слов по категориям:" + "\n".join(lines))
+
+@router.callback_query(F.data == "admin_stats_levels")
+async def show_level_stats(callback: CallbackQuery):
+    stats = await get_level_stats()
+    lines = [f"{r['уровень']}: {r['количество_слов']}" for r in stats]
+    await callback.message.answer("📈 Кол-во слов по уровням:" + "\n".join(lines))
+
+@router.callback_query(F.data == "admin_add_category")
+async def prompt_add_category(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Введите название новой категории:")
+    await state.set_state("awaiting_new_category")
+
+@router.message(AdminState.awaiting_new_category)
+async def receive_new_category(message: Message, state: FSMContext):
+    result = await add_category(message.text)
+    await message.answer(result)
+    await state.clear()
+
+@router.callback_query(F.data == "admin_delete_category")
+async def prompt_delete_category(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Введите название категории, которую хотите удалить:")
+    await state.set_state("awaiting_delete_category")
+
+@router.message(AdminState.awaiting_delete_category)
+async def receive_category_to_delete(message: Message, state: FSMContext):
+    result = await delete_category(message.text)
+    await message.answer(result)
+    await state.clear()
+
+@router.callback_query(F.data == "admin_add_level")
+async def prompt_add_level(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Введите название нового уровня:")
+    await state.set_state("awaiting_new_level")
+
+@router.message(AdminState.awaiting_new_level)
+async def receive_new_level(message: Message, state: FSMContext):
+    result = await add_level(message.text)
+    await message.answer(result)
+    await state.clear()
+
+@router.callback_query(F.data == "admin_delete_level")
+async def prompt_delete_level(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Введите название уровня, который нужно удалить:")
+    await state.set_state("awaiting_delete_level")
+
+@router.message(AdminState.awaiting_delete_level)
+async def receive_level_to_delete(message: Message, state: FSMContext):
+    result = await delete_level(message.text)
+    await message.answer(result)
+    await state.clear()
+
+@router.callback_query(F.data == "admin_list_levels")
+async def list_all_levels(callback: CallbackQuery):
+    levels = await get_all_levels_text()
+    await callback.message.answer("📋 Список уровней:" + "\n".join(levels))
+
+@router.message(Command("start"))
+async def cmd_start(message: Message, state: FSMContext):
+    await state.clear()  # <-- обязательно
     categories = await get_all_categories()
-    await state.update_data(categories=categories)
+    keyboard = category_keyboard(categories)
     await message.answer(
-        "Привет! 👋\nЯ помогу тебе выучить испанские слова.\n\nВыбери категорию:",
-        reply_markup=category_keyboard(categories)
-    )
-    await state.set_state(QuizState.choosing_category)
-
-@router.message(QuizState.choosing_category)
-async def choose_category(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    if message.text not in data['categories']:
-        await message.answer("Пожалуйста, выбери категорию из списка.")
-        return
-    await state.update_data(category=message.text)
-    levels = await get_all_levels()
-    await state.update_data(levels=levels)
-    await message.answer(
-        "Отлично! Теперь выбери уровень сложности:",
-        reply_markup=level_keyboard(levels)
-    )
-    await state.set_state(QuizState.choosing_level)
-
-@router.message(QuizState.choosing_level)
-async def choose_level(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    if message.text not in data['levels'] and message.text.lower() != "все уровни":
-        await message.answer("Пожалуйста, выбери уровень из списка.")
-        return
-    await state.update_data(level=message.text if message.text != "все уровни" else None)
-    await message.answer(
-        "Сколько слов ты хочешь пройти? (например, 5, 10, 15)",
-        reply_markup=types.ReplyKeyboardRemove()
-    )
-    await state.set_state(QuizState.choosing_quantity)
-
-@router.message(QuizState.choosing_quantity)
-async def choose_quantity(message: types.Message, state: FSMContext):
-    try:
-        count = int(message.text)
-        if count < 1 or count > 20:
-            raise ValueError()
-    except ValueError:
-        await message.answer("Введите число от 1 до 20.")
-        return
-
-    await state.update_data(quantity=count)
-    data = await state.get_data()
-
-    await message.answer(
-        f"Начинаем тренировку!\n\nКатегория: {data['category']}\nУровень: {data['level'] or 'все уровни'}\nСлов: {data['quantity']}"
-    )
-    await state.set_state(QuizState.quiz_in_progress)
-
-    words = await get_words_for_quiz(data['category'], data['level'], data['quantity'])
-    if not words:
-        await message.answer("Нет слов по выбранным параметрам. Попробуй другую категорию или уровень.")
-        await state.clear()
-        return
-
-    random.shuffle(words)
-    await state.update_data(words=words, correct=0, total=0)
-
-    first = words[0]
-    options = [first['word_rus'], first['other_rus1'], first['other_rus2'], first['other_rus3']]
-    random.shuffle(options)
-
-    keyboard = quiz_options_keyboard(options)
-    await message.answer(
-        f"Как переводится: *{first['word_esp']}*?",
-        parse_mode="Markdown",
+        "👋 Привет! Пожалуйста, выбери категорию слов для тренировки:",
         reply_markup=keyboard
     )
 
-@router.message(QuizState.quiz_in_progress)
-async def handle_answer(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    total = data.get('total', 0)
-    correct = data.get('correct', 0)
-    words = data.get('words', [])
+@router.message(Command("cancel"))
+async def cancel_command(message: Message, state: FSMContext):
+    """Обработчик команды /cancel — сбрасывает состояние FSM и возвращает к стартовому экрану"""
+    await state.clear()
+    await message.answer("❌ Действие отменено. Возвращаемся в начало ⤵️")
+    await cmd_start(message, state)  # перезапуск старта
 
-    current = words[total]
-    right_answer = current['word_rus']
-
-    if message.text.strip().lower() == "пропустить":
-        await message.answer(f"ℹ️ Пропущено. Правильный ответ: {right_answer}")
-    elif message.text.strip().lower() == right_answer.strip().lower():
-        correct += 1
-        await message.answer("✅ Верно!")
-    else:
-        await message.answer(f"❌ Неверно. Правильный ответ: {right_answer}")
-
-    total += 1
-    if total >= len(words):
-        percent = round(correct / total * 100)
-        await message.answer(
-            f"🏁 Викторина завершена!\nПравильных ответов: {correct} из {total} ({percent}%)",
-            reply_markup=start_over_keyboard
-        )
-        await state.clear()
-        return
-
-    await state.update_data(total=total, correct=correct)
-
-    next_word = words[total]
-    options = [next_word['word_rus'], next_word['other_rus1'], next_word['other_rus2'], next_word['other_rus3']]
-    random.shuffle(options)
-
-    keyboard = quiz_options_keyboard(options)
-    await message.answer(
-        f"Как переводится: *{next_word['word_esp']}*?",
-        parse_mode="Markdown",
-        reply_markup=keyboard
-    )
