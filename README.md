@@ -156,12 +156,15 @@ esp2rus_bot/
 │   │   ├── __init__.py
 │   │   ├── user_handlers.py      # Логика викторины: обработка команд /start, /help и логика для пользователей
 │   │   └── admin_handlers.py     # Админ панель: загрузка CSV-файлов, добавление и удаление категорий и уровней
+│   ├── states/
+│   │   ├── __init__.py           # FSM-состояния  
+│   │   ├── adnin_states.py       # FSM-состояния для админ панели
 │   ├── keyboards.py              # клавиатуры Telegram
 │
 ├── core/
 │   ├── __init__.py
 │   ├── config.py                 # Конфиги: токен, список админов, пути
-│   ├── utils.py                  # Вспомогательные функции: валидация, рандомизация
+│   ├── file_utils.py             # Вспомогательные функции: валидация, рандомизация
 │   └── converter.py              # CSV → JSON (сохраняет words.json)
 │
 ├── db/
@@ -171,8 +174,9 @@ esp2rus_bot/
 │   └── importer.py               # Импорт JSON в БД
 │
 ├── data/
-│   ├── uploads/                  # Папка для загрузки CSV-файлов (отправленных админом через бота в Telegram)
-│   ├── words.json                # Итоговый JSON-файл после разбора CSV
+│   ├── uploads                   # сюда складывать все загруженные CSV и их конвертации в JSON
+│   ├── logs                      # сюда сохранять JSON с добавленными словами
+│   ├── errors                    # сюда сохранять JSON с ошибками при импорте
 │
 ├── scripts/
 │   └── stats.sql                 # Готовые SQL-скрипты для подсчет аналитики в разных разрезах
@@ -215,6 +219,14 @@ docker compose up -d --build
 - `/start` — начать викторину
 - `/cancel` — отменить текущую сессию (возврат к `/start`)
 - `/admin` — вход в админ-панель
+
+```
+/start
+ ⮑ category_selected
+     ⮑ level_selected
+         ⮑ word_count_selected
+             ⮑ start_quiz
+```
 
 ## 🔧 Админ-панель `/admin`
 

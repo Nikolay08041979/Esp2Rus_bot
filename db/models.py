@@ -14,17 +14,30 @@ async def get_all_levels() -> list[str]:
     return [r["lev_name"] for r in rows]
 
 async def get_words_for_quiz(category: str, level: str | None, limit: int) -> list[dict]:
-    query = '''
-        SELECT d.word_esp, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3
-        FROM esp2rus_dictionary d
-        JOIN word_category c ON d.cat_id = c.cat_id
-        LEFT JOIN study_level l ON d.lev_id = l.lev_id
-        WHERE c.cat_name = $1 AND ($2::text IS NULL OR l.lev_name = $2)
-        ORDER BY random()
-        LIMIT $3
-    '''
     conn = await asyncpg.connect(**DB)
-    rows = await conn.fetch(query, category, level, limit)
+
+    if level and level.lower().strip() != "все уровни":
+        query = '''
+            SELECT d.word_esp, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3
+            FROM esp2rus_dictionary d
+            JOIN word_category c ON d.cat_id = c.cat_id
+            LEFT JOIN study_level l ON d.lev_id = l.lev_id
+            WHERE LOWER(c.cat_name) = LOWER($1) AND LOWER(l.lev_name) = LOWER($2)
+            ORDER BY random()
+            LIMIT $3
+        '''
+        rows = await conn.fetch(query, category, level, limit)
+    else:
+        query = '''
+            SELECT d.word_esp, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3
+            FROM esp2rus_dictionary d
+            JOIN word_category c ON d.cat_id = c.cat_id
+            WHERE LOWER(c.cat_name) = LOWER($1)
+            ORDER BY random()
+            LIMIT $2
+        '''
+        rows = await conn.fetch(query, category, limit)
+
     await conn.close()
     return [dict(r) for r in rows]
 

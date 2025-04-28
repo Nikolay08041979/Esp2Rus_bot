@@ -4,7 +4,7 @@ services:
   bot:
     build: .
     container_name: esp2rus_bot
-    command: python main.py
+    command: python main_copy.py
     env_file:
       - .env
     volumes:

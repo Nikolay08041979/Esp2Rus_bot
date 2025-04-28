@@ -2,17 +2,27 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 
 # --- Reply Keyboards ---
 
-def category_keyboard(categories: list[str]) -> ReplyKeyboardMarkup:
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text=cat)] for cat in categories],
-        resize_keyboard=True
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+def category_keyboard(categories: list[str]) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=cat, callback_data=f"cat:{cat}")] for cat in categories
+        ]
     )
 
+
 def level_keyboard(levels: list[str]) -> ReplyKeyboardMarkup:
+    """
+    Генерация клавиатуры уровней сложности.
+    Используется после выбора категории, в состоянии QuizState.CategorySelected → LevelSelected.
+    """
     return ReplyKeyboardMarkup(
         keyboard=[[KeyboardButton(text=level)] for level in levels] + [[KeyboardButton(text="все уровни")]],
         resize_keyboard=True
     )
+
+
 
 def quiz_options_keyboard(options: list[str]) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
@@ -26,6 +36,13 @@ start_over_keyboard = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+def answer_keyboard(options: list[str]) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=opt)] for opt in options],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
 
 
 # --- Inline Keyboards (если появятся) ---
