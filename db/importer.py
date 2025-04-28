@@ -1,71 +1,88 @@
 import json
-import psycopg2
-from psycopg2.extras import execute_batch
+import asyncpg
+from core.config import DB
 
-def import_words_from_json(json_path: str, db_config: dict) -> dict:
-    """Импортирует слова из JSON-файла в БД и возвращает отчёт."""
-    with open(json_path, encoding='utf-8') as f:
-        data = json.load(f)
+async def import_words_from_json(json_path: str, db_params: dict) -> dict:
+    """Импорт слов из JSON-файла в базу данных"""
 
-    success_count = 0
-    errors = []
+    with open(json_path, "r", encoding="utf-8") as f:
+        words = json.load(f)
+
+    added = 0
     duplicates = []
+    errors = []
+    added_words = []
 
-    conn = psycopg2.connect(**db_config)
-    cur = conn.cursor()
+    conn = await asyncpg.connect(**db_params)
 
-    def get_id(table, column, value):
-        cur.execute(f"SELECT id FROM (SELECT cat_id as id, cat_name as name FROM word_category UNION ALL SELECT lev_id, lev_name FROM study_level) sub WHERE LOWER(name) = LOWER(%s)", (value,))
-        res = cur.fetchone()
-        if res:
-            return res[0]
-        raise ValueError(f"{value} не найден в {table}")
-
-    for entry in data:
-        # Приводим все значения к нижнему регистру для единообразия хранения
-        entry['word_esp'] = entry['word_esp'].strip().lower()
-        entry['word_rus'] = entry['word_rus'].strip().lower()
-        entry['category'] = entry['category'].strip().lower()
-        entry['level'] = entry['level'].strip().lower()
+    for word in words:
         try:
-            other_rus = entry['other_rus'].split(',')
-            if len(other_rus) != 3:
-                raise ValueError("other_rus должен содержать 3 значения")
+            word_esp = word.get("word_esp", "").strip().lower()
+            word_rus = word.get("word_rus", "").strip().lower()
+            category = word.get("category", "").strip().lower()
+            level = word.get("level", None)
+            other_rus1 = word.get("other_rus1")
+            other_rus2 = word.get("other_rus2")
+            other_rus3 = word.get("other_rus3")
 
-            # Проверка на дубликат (без учёта регистра)
-            cur.execute("SELECT word_id FROM esp2rus_dictionary WHERE LOWER(word_esp) = LOWER(%s)", (entry['word_esp'],))
-            if cur.fetchone():
-                duplicates.append(entry['word_esp'])
+            if not word_esp or not word_rus or not category:
+                errors.append(word)
                 continue
 
-            cat_id = get_id('word_category', 'cat_name', entry['category'])
-            lev_id = get_id('study_level', 'lev_name', entry['level'])
+            # Проверка наличия слова
+            existing = await conn.fetchrow("""
+                SELECT * FROM esp2rus_dictionary d
+                JOIN word_category c ON d.cat_id = c.cat_id
+                WHERE d.word_esp = $1
+            """, word_esp)
 
-            cur.execute(
-                """INSERT INTO esp2rus_dictionary
-                (word_esp, word_rus, other_rus1, other_rus2, other_rus3, cat_id, lev_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-                """, (
-                    entry['word_esp'],
-                    entry['word_rus'],
-                    other_rus[0],
-                    other_rus[1],
-                    other_rus[2],
-                    cat_id,
-                    lev_id
+            if existing:
+                existing_category = existing["cat_name"].strip().lower()
+                if existing_category == category:
+                    duplicates.append(word)
+                    continue  # Дубликат в той же категории
+                else:
+                    # Возможен конфликт категорий
+                    duplicates.append(word)
+                    continue
+
+            # Проверка существования категории
+            cat = await conn.fetchrow("SELECT cat_id FROM word_category WHERE LOWER(cat_name) = LOWER($1)", category)
+            if not cat:
+                cat_id = await conn.fetchval(
+                    "INSERT INTO word_category (cat_name) VALUES ($1) RETURNING cat_id", category
                 )
-            )
-            success_count += 1
+            else:
+                cat_id = cat["cat_id"]
+
+            # Проверка существования уровня
+            lev_id = None
+            if level:
+                lev = await conn.fetchrow("SELECT lev_id FROM study_level WHERE LOWER(lev_name) = LOWER($1)", level)
+                if not lev:
+                    lev_id = await conn.fetchval(
+                        "INSERT INTO study_level (lev_name) VALUES ($1) RETURNING lev_id", level
+                    )
+                else:
+                    lev_id = lev["lev_id"]
+
+            # Добавление нового слова
+            await conn.execute("""
+                INSERT INTO esp2rus_dictionary (word_esp, word_rus, cat_id, lev_id, other_rus1, other_rus2, other_rus3)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+            """, word_esp, word_rus, cat_id, lev_id, other_rus1, other_rus2, other_rus3)
+
+            added += 1
+            added_words.append(word_esp)
 
         except Exception as e:
-            errors.append(f"{entry.get('word_esp', '?')}: {str(e)}")
+            errors.append({"word": word, "error": str(e)})
 
-    conn.commit()
-    cur.close()
-    conn.close()
+    await conn.close()
 
     return {
-        "added": success_count,
+        "added": added,
         "duplicates": duplicates,
-        "errors": errors
+        "errors": errors,
+        "added_words": added_words
     }
