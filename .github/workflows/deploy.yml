@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Deploy Esp2Ru_bot to Server
 
 on:
   push:
@@ -15,11 +15,12 @@ jobs:
     - name: Deploy via SSH
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.VPS_SSH_KEY }}
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
         script: |
-          cd /root/Esp2Rus_bot
+          cd /home/ubuntu/Esp2Rus_bot
           git pull origin main
-          docker compose down
           docker compose up -d --build
+
