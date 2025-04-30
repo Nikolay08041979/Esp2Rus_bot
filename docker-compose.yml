@@ -7,6 +7,8 @@ services:
     command: python main_copy.py
     env_file:
       - .env
+    environment:
+      - ENV_MODE=prod
     volumes:
       - .:/app
     depends_on:

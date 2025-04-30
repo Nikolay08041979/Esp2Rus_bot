@@ -133,3 +133,16 @@ async def get_level_stats() -> list[dict]:
     rows = await conn.fetch(query)
     await conn.close()
     return [dict(r) for r in rows]
+
+async def get_all_words() -> list[dict]:
+    query = '''
+        SELECT d.word_esp, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3,
+               c.cat_name AS category, l.lev_name AS level
+        FROM esp2rus_dictionary d
+        JOIN word_category c ON d.cat_id = c.cat_id
+        LEFT JOIN study_level l ON d.lev_id = l.lev_id
+    '''
+    conn = await asyncpg.connect(**DB)
+    rows = await conn.fetch(query)
+    await conn.close()
+    return [dict(r) for r in rows]

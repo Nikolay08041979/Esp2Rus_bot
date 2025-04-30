@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from bot.keyboards import category_keyboard, level_keyboard, answer_keyboard, start_over_keyboard
 from bot.states import QuizState
-from db.models import get_all_categories, get_all_levels, get_words_for_quiz
+from db.models import get_all_categories, get_all_levels, get_words_for_quiz, get_all_words
 from random import shuffle
 
 import logging
@@ -56,10 +56,33 @@ async def level_selected(message: Message, state: FSMContext):
 
     await state.update_data(level=level)
     await state.set_state(QuizState.AwaitingWordCount)
+
+    # Получаем все слова и фильтруем по категории и уровню
+    all_words = await get_all_words()
+    filtered_words = [
+        w for w in all_words
+        if w['category'].lower() == category.lower() and (
+                level == "все уровни" or (w['level'] and w['level'].lower() == level)
+        )
+    ]
+
+    # Проверка на пустой результат
+    if not filtered_words:
+        await message.answer("⚠️ В этой категории и уровне нет слов. Попробуйте выбрать другую категорию или уровень.")
+        return
+
+    # Отправляем сообщение с количеством слов
     await message.answer(
-        f"✅ Вы выбрали:\nКатегория: {category}\nУровень: {level}\n\n"
+        f"✅ Вы выбрали:\nКатегория: {category}\nУровень: {level}\nВсего слов: {len(filtered_words)}\n\n"
         "Сколько слов вы хотите пройти в этой тренировке? (например, 5, 10, 15)"
     )
+
+
+
+    # await message.answer(
+    #     f"✅ Вы выбрали:\nКатегория: {category}\nУровень: {level}\n\n"
+    #     "Сколько слов вы хотите пройти в этой тренировке? (например, 5, 10, 15)"
+    # )
 
 @router.message(StateFilter(QuizState.AwaitingWordCount))
 async def word_count_selected(message: Message, state: FSMContext):
