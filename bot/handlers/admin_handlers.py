@@ -1,7 +1,7 @@
 # --- Новый файл: bot/handlers/admin_handlers.py ---
 
 from aiogram import Router, Bot, F
-from aiogram.filters import Command
+from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -36,12 +36,22 @@ def admin_menu_keyboard():
     )
 
 # --- Админский вход ---
-@router.message(Command("admin"))
-async def admin_entry(message: Message):
+@router.message(Command("admin"), StateFilter("*"))
+async def admin_entry(message: Message, state: FSMContext):
     if message.from_user.id not in ADMIN_IDS:
         await message.answer("⛔ У вас нет прав администратора.")
         return
+
+    await state.clear()
     await message.answer("🔧 Добро пожаловать в админ-панель:", reply_markup=admin_menu_keyboard())
+
+
+# @router.message(Command("admin"))
+# async def admin_entry(message: Message):
+#     if message.from_user.id not in ADMIN_IDS:
+#         await message.answer("⛔ У вас нет прав администратора.")
+#         return
+#     await message.answer("🔧 Добро пожаловать в админ-панель:", reply_markup=admin_menu_keyboard())
 
 # --- Статистика по категориям ---
 @router.callback_query(F.data == "admin_stats")

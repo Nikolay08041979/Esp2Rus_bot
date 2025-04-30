@@ -24,8 +24,8 @@ async def main():
     dp = Dispatcher(storage=MemoryStorage())
 
     # ✅ Регистрация роутеров
-    dp.include_router(user_router)
     dp.include_router(admin_router)
+    dp.include_router(user_router)
 
     # ✅ Установка команд
     await bot.set_my_commands([
