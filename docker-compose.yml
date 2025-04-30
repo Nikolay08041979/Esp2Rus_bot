@@ -4,11 +4,9 @@ services:
   bot:
     build: .
     container_name: esp2rus_bot
-    command: python main_copy.py
+    command: python main.py
     env_file:
       - .env
-    environment:
-      - ENV_MODE=prod
     volumes:
       - .:/app
     depends_on:
