@@ -45,14 +45,6 @@ async def admin_entry(message: Message, state: FSMContext):
     await state.clear()
     await message.answer("🔧 Добро пожаловать в админ-панель:", reply_markup=admin_menu_keyboard())
 
-
-# @router.message(Command("admin"))
-# async def admin_entry(message: Message):
-#     if message.from_user.id not in ADMIN_IDS:
-#         await message.answer("⛔ У вас нет прав администратора.")
-#         return
-#     await message.answer("🔧 Добро пожаловать в админ-панель:", reply_markup=admin_menu_keyboard())
-
 # --- Статистика по категориям ---
 @router.callback_query(F.data == "admin_stats")
 async def show_stats(callback: CallbackQuery):
