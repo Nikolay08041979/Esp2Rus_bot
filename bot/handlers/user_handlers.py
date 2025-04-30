@@ -6,18 +6,26 @@ from bot.keyboards import category_keyboard, level_keyboard, answer_keyboard, st
 from bot.states import QuizState
 from db.models import get_all_categories, get_all_levels, get_words_for_quiz, get_all_words
 from random import shuffle
-
 import logging
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 router = Router()
 
-@router.message(Command("start"))
-async def cmd_start(message: Message, state: FSMContext):
+# 🔁 Универсальный стартовый экран
+async def show_start_menu(message: Message, state: FSMContext):
     await state.clear()
     categories = await get_all_categories()
     keyboard = category_keyboard(categories)
     await message.answer("👋 Привет! Пожалуйста, выбери категорию слов:", reply_markup=keyboard)
+
+@router.message(Command("start"))
+async def cmd_start(message: Message, state: FSMContext):
+    await show_start_menu(message, state)
+
+@router.message(Command("cancel"), flags={"allow_fsm": True})
+async def cancel_command(message: Message, state: FSMContext):
+    await message.answer("❌ Действие отменено. Возвращаемся в начало ⤵️")
+    await show_start_menu(message, state)
 
 @router.callback_query(F.data.startswith("cat:"))
 async def category_selected(callback: CallbackQuery, state: FSMContext):
@@ -57,32 +65,22 @@ async def level_selected(message: Message, state: FSMContext):
     await state.update_data(level=level)
     await state.set_state(QuizState.AwaitingWordCount)
 
-    # Получаем все слова и фильтруем по категории и уровню
     all_words = await get_all_words()
     filtered_words = [
         w for w in all_words
         if w['category'].lower() == category.lower() and (
-                level == "все уровни" or (w['level'] and w['level'].lower() == level)
+            level == "все уровни" or (w['level'] and w['level'].lower() == level)
         )
     ]
 
-    # Проверка на пустой результат
     if not filtered_words:
         await message.answer("⚠️ В этой категории и уровне нет слов. Попробуйте выбрать другую категорию или уровень.")
         return
 
-    # Отправляем сообщение с количеством слов
     await message.answer(
         f"✅ Вы выбрали:\nКатегория: {category}\nУровень: {level}\nВсего слов: {len(filtered_words)}\n\n"
         "Сколько слов вы хотите пройти в этой тренировке? (например, 5, 10, 15)"
     )
-
-
-
-    # await message.answer(
-    #     f"✅ Вы выбрали:\nКатегория: {category}\nУровень: {level}\n\n"
-    #     "Сколько слов вы хотите пройти в этой тренировке? (например, 5, 10, 15)"
-    # )
 
 @router.message(StateFilter(QuizState.AwaitingWordCount))
 async def word_count_selected(message: Message, state: FSMContext):
@@ -182,9 +180,3 @@ async def process_quiz_answer(message: Message, state: FSMContext):
         f"Как переводится: {question}?",
         reply_markup=answer_keyboard(options)
     )
-
-@router.message(Command("cancel"))
-async def cancel_command(message: Message, state: FSMContext):
-    await state.clear()
-    await message.answer("❌ Действие отменено. Возвращаемся в начало ⤵️")
-    await cmd_start(message, state)
