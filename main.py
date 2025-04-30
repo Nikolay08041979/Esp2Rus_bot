@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 logger.info(f"Запуск бота в режиме: {env}")
 
 async def main():
-    bot = Bot(token=token, default=DefaultBotProperties(parse_mode="HTML")) 
+    bot = Bot(token=token, default=DefaultBotProperties(parse_mode="HTML"))
     dp = Dispatcher(storage=MemoryStorage())
 
     dp.include_router(user_router)
