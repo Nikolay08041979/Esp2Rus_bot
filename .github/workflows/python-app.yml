@@ -30,6 +30,6 @@ jobs:
         pip install flake8
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
 
-    - name: 🚀 Test run main_copy.py (dry run)
+    - name: 🚀 Test run main.py (dry run)
       run: |
         python main.py || echo "Expected failure if no .env is provided"
