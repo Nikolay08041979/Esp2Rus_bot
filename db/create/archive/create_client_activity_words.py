@@ -9,6 +9,6 @@ async def ensure_client_activity_words_table(conn):
         CREATE TABLE IF NOT EXISTS client_activity_words (
             id SERIAL PRIMARY KEY,
             activity_id INT NOT NULL REFERENCES client_activity_log(id) ON DELETE CASCADE,
-            word_id INT NOT NULL REFERENCES esp2rus_dictionary(word_id) ON DELETE CASCADE
+            word_id INT NOT NULL REFERENCES dictionary(word_id) ON DELETE CASCADE
         );
     """)

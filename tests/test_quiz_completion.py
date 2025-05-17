@@ -3,8 +3,8 @@ import pytest
 from datetime import datetime, timedelta
 from unittest.mock import AsyncMock
 
-from analytics.analytics import log_client_activity
-from analytics.metrics.calculate_quiz_weight import calculate_quiz_weight
+from archeved.analytics_old.analytics_v1_backup import log_client_activity
+from archeved.calculate_quiz_weight import calculate_quiz_weight
 from analytics.metrics.get_level_id_word import get_level_id_word
 
 @pytest.mark.asyncio
@@ -16,8 +16,8 @@ async def test_quiz_completion_logic(monkeypatch):
     mock_state = AsyncMock()
     mock_state.get_data.return_value = {
         "words": [
-            {"word_esp": "el gato", "word_rus": "кот", "level_id_word": 1},
-            {"word_esp": "el perro", "word_rus": "собака", "level_id_word": 1},
+            {"word_src": "el gato", "word_rus": "кот", "level_id_word": 1},
+            {"word_src": "el perro", "word_rus": "собака", "level_id_word": 1},
         ],
         "score": 2,
         "index": 2,  # <-- Важно! index == len(words)

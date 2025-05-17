@@ -20,10 +20,10 @@ analytics/
 │   └── ...
 db/
 ├── create/
-│   ├── create_table_learned_words.sql
-│   ├── create_table_user_word_stats.sql
-│   ├── create_table_user_progress_by_theme.sql
-│   ├── create_view_level_matrix.sql
+│   ├── learned_words.sql
+│   ├── user_word_stats.sql
+│   ├── user_progress_by_theme.sql
+│   ├── level_matrix.sql
 │   └── ...
 ```
 

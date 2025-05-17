@@ -18,8 +18,8 @@ async def get_words_for_quiz(category: str, level: str | None, limit: int) -> li
 
     if level and level.lower().strip() != "все уровни":
         query = '''
-            SELECT d.word_esp, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3
-            FROM esp2rus_dictionary d
+            SELECT d.word_src, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3
+            FROM dictionary d
             JOIN word_category c ON d.cat_id = c.cat_id
             LEFT JOIN study_level l ON d.lev_id = l.lev_id
             WHERE LOWER(c.cat_name) = LOWER($1) AND LOWER(l.lev_name) = LOWER($2)
@@ -29,8 +29,8 @@ async def get_words_for_quiz(category: str, level: str | None, limit: int) -> li
         rows = await conn.fetch(query, category, level, limit)
     else:
         query = '''
-            SELECT d.word_esp, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3
-            FROM esp2rus_dictionary d
+            SELECT d.word_src, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3
+            FROM dictionary d
             JOIN word_category c ON d.cat_id = c.cat_id
             WHERE LOWER(c.cat_name) = LOWER($1)
             ORDER BY random()
@@ -46,7 +46,7 @@ async def get_category_stats() -> list[dict]:
     query = '''
         SELECT c.cat_name AS категория, COALESCE(COUNT(d.word_id), 0) AS количество_слов
         FROM word_category c
-        LEFT JOIN esp2rus_dictionary d ON c.cat_id = d.cat_id
+        LEFT JOIN dictionary d ON c.cat_id = d.cat_id
         GROUP BY c.cat_name
         ORDER BY количество_слов DESC
     '''
@@ -86,7 +86,7 @@ async def delete_category(name: str) -> str:
     conn = await asyncpg.connect(**DB)
     await conn.execute(
         '''
-        DELETE FROM esp2rus_dictionary
+        DELETE FROM dictionary
         WHERE cat_id = (SELECT cat_id FROM word_category WHERE LOWER(cat_name) = LOWER($1))
         ''',
         name
@@ -106,7 +106,7 @@ async def delete_level(name: str) -> str:
     conn = await asyncpg.connect(**DB)
     await conn.execute(
         '''
-        DELETE FROM esp2rus_dictionary
+        DELETE FROM dictionary
         WHERE lev_id = (SELECT lev_id FROM study_level WHERE LOWER(lev_name) = LOWER($1))
         ''',
         name
@@ -125,7 +125,7 @@ async def get_level_stats() -> list[dict]:
     query = '''
         SELECT l.lev_name AS уровень, COALESCE(COUNT(d.word_id), 0) AS количество_слов
         FROM study_level l
-        LEFT JOIN esp2rus_dictionary d ON l.lev_id = d.lev_id
+        LEFT JOIN dictionary d ON l.lev_id = d.lev_id
         GROUP BY l.lev_name
         ORDER BY количество_слов DESC
     '''
@@ -136,13 +136,36 @@ async def get_level_stats() -> list[dict]:
 
 async def get_all_words() -> list[dict]:
     query = '''
-        SELECT d.word_esp, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3,
+        SELECT d.word_src, d.word_rus, d.other_rus1, d.other_rus2, d.other_rus3,
                c.cat_name AS category, l.lev_name AS level
-        FROM esp2rus_dictionary d
+        FROM dictionary d
         JOIN word_category c ON d.cat_id = c.cat_id
         LEFT JOIN study_level l ON d.lev_id = l.lev_id
     '''
     conn = await asyncpg.connect(**DB)
     rows = await conn.fetch(query)
+    await conn.close()
+    return [dict(r) for r in rows]
+
+async def get_personalized_words(tg_id: int, category: str, level: str, limit: int) -> list[dict]:
+    conn = await asyncpg.connect(**DB)
+    print(f"[DEBUG get_personalized_words] tg_id={tg_id!r}, category={category!r}, level={level!r}, limit={limit}")
+    print(f"[DEBUG SQL] SELECT where category = {category!r}, level = {level!r}")
+
+    query = '''
+        SELECT pw.word_src, pw.word_rus, pw.other_rus1, pw.other_rus2, pw.other_rus3,
+               pw.category, pw.level
+        FROM view_personalized_words pw
+        WHERE pw.client_id = (SELECT client_id FROM client_info WHERE tg_id = $1)
+          AND LOWER(pw.category) = LOWER($2)
+          AND (
+              $3::text IS NULL OR LOWER(pw.level) = LOWER($3::text)
+          )
+        ORDER BY random()
+        LIMIT $4
+    '''
+
+    rows = await conn.fetch(query, tg_id, category, level, limit)
+
     await conn.close()
     return [dict(r) for r in rows]

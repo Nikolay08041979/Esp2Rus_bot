@@ -58,7 +58,7 @@ async def generate_admin_report_csv(days: int = 30) -> str:
                 SELECT ci.username, ca.client_rating
                 FROM client_analytics ca
                 JOIN client_info ci ON ci.client_id = ca.client_id
-                WHERE ca.last_active = $1
+                WHERE ca.last_activity_date = $1
                 ORDER BY ca.client_rating DESC
                 LIMIT 3
                 """, report_date

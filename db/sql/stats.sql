@@ -3,7 +3,7 @@ SELECT
     c.cat_name AS категория,
     COUNT(d.word_id) AS количество_слов
 FROM
-    esp2rus_dictionary d
+    dictionary d
 JOIN
     word_category c ON d.cat_id = c.cat_id
 GROUP BY
@@ -19,7 +19,7 @@ SELECT
     l.lev_name AS уровень,
     COUNT(d.word_id) AS количество_слов
 FROM
-    esp2rus_dictionary d
+    dictionary d
 JOIN
     word_category c ON d.cat_id = c.cat_id
 JOIN

@@ -1,4 +1,4 @@
-👤 {first_name} (@{username}) 🆔 {tg_id}
+👤 @{username} 🆔 {tg_id}
 
 🎁 Поздравляю, ты с нами уже {days_with_us} дней (с {reg_date})
 

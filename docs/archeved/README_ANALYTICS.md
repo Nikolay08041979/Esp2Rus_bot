@@ -16,7 +16,7 @@
 
 ## Структура базы данных
 
-##### ![Архитектура БД проекта (этап MVP)](images/schema_v2.png)
+##### ![Архитектура БД проекта (этап MVP)](schema_v2.png)
 
 ---
 
@@ -150,10 +150,10 @@ analytics/
 ```
 | Этап    | Скрипт                               | Назначение                                                                                                             |
 | ------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| **1.0** | `step1_backup_and_cleanup.py`        | Бэкап и (опциональное) удаление всех таблиц, включая `esp2rus_dictionary`, `study_level`, `word_category` и клиентские |
+| **1.0** | `step1_backup_and_cleanup.py`        | Бэкап и (опциональное) удаление всех таблиц, включая `dictionary`, `study_level`, `word_category` и клиентские |
 | **1.1** | `step1_1_backup_and_cleanup_dict.py` | Отдельный бэкап и удаление только словаря                                                                              |
 | **2.0** | `step2_create_tables.py`             | Создание таблиц `study_levels`, `client_info`, `client_analytics`, `client_activity_log`                               |
-| **2.1** | `step2_1_create_dict_tables.py`      | Создание `esp2rus_dictionary`, `study_level`, `word_category`                                                          |
+| **2.1** | `step2_1_create_dict_tables.py`      | Создание `dictionary`, `study_level`, `word_category`                                                          |
 | **3.0** | `step3_restore_from_backup.py`       | Восстановление данных из последнего бэкапа во все таблицы                                                              |
 | **4.0** | `step4_verify_links.py`              | Верификация связей `study_level ↔ study_levels`                                                                        |
 | **5.0** | `step5_create_view.py`               | Создание `VIEW` (`view_study_level_mapped`, `client_level_view`, ...)                                                  |

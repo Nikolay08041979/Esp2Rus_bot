@@ -10,6 +10,9 @@ from core.config import BOT_TOKEN
 from bot.handlers.user_handlers import router as user_router
 from bot.handlers.admin_handlers import router as admin_router
 
+from bot.handlers.common_handlers import router as common_router
+
+
 # ✅ Глобальная настройка логгирования (в начале файла)
 logging.basicConfig(
     level=logging.INFO,
@@ -24,6 +27,7 @@ async def main():
     dp = Dispatcher(storage=MemoryStorage())
 
     # ✅ Регистрация роутеров
+    dp.include_router(common_router)
     dp.include_router(admin_router)
     dp.include_router(user_router)
 
@@ -31,7 +35,8 @@ async def main():
     await bot.set_my_commands([
         BotCommand(command="start", description="Начать тренировку"),
         BotCommand(command="cancel", description="Остановить текущую операцию"),
-        BotCommand(command="help", description="Помощь по боту")
+        BotCommand(command="help", description="Помощь по боту"),
+        BotCommand(command="report", description="Отчет о ваших достижениях"),
     ])
 
     logger.info("🤖 Бот успешно запущен и готов к приёму обновлений.")

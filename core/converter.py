@@ -8,7 +8,7 @@ def convert_csv_to_json(csv_path: str, json_path: str):
         words = []
         for row in reader:
             word = {
-                "word_esp": row["word_esp"].strip().lower(),
+                "word_src": row["word_src"].strip().lower(),
                 "word_rus": row["word_rus"].strip().lower(),
                 "category": row["category"].strip().lower(),
                 "level": row["level"].strip().lower() if "level" in row and row["level"] else None,

@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS client_activity_log (
 CREATE TABLE IF NOT EXISTS client_analytics (
     id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES client_info(client_id),
-    client_last_login_date DATE,
+    client_last_activity_date DATE,
     quizes_finished_total INTEGER,
     quizes_score_total NUMERIC(3,2),
     level_id_current INTEGER REFERENCES study_levels(level_id_client),

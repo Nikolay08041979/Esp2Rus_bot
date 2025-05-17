@@ -12,6 +12,11 @@ ENV/
 env/
 
 # Data
+data/logs/*.log
+data/backup/sql/*
+data/uploads/*.csv
+data/json/*.json
+
 *.sqlite3
 *.db
 *.bak
@@ -19,6 +24,7 @@ env/
 *.csv
 *.xlsx
 *.zip
+
 
 # IDE
 .vscode/
@@ -31,4 +37,6 @@ Thumbs.db
 
 # PyCharm project settings
 *.iml
+
+
 

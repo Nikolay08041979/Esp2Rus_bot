@@ -14,9 +14,9 @@
 ```
 db/
 ├── create/                        # Храним SQL-файлы
-│   ├── create_table_client_info.sql
-│   ├── create_table_learned_words.sql
-│   ├── create_view_user_progress_by_theme.sql
+│   ├── client_info.sql
+│   ├── learned_words.sql
+│   ├── user_progress_by_theme.sql
 │   └── ...
 ├── install_config.py              # Описывает, что установить
 ├── run_install.py                 # Основной управляющий скрипт

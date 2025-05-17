@@ -7,3 +7,8 @@ class AdminStates(StatesGroup):
     awaiting_delete_category = State()
     awaiting_new_level = State()
     awaiting_delete_level = State()
+
+class AdminReportState(StatesGroup):
+    choosing_mode = State()
+    enter_user = State()
+    enter_date = State()

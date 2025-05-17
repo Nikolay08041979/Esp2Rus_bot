@@ -17,7 +17,7 @@ async def import_words_from_json(json_path: str, db_params: dict) -> dict:
 
     for word in words:
         try:
-            word_esp = word.get("word_esp", "").strip().lower()
+            word_src = word.get("word_src", "").strip().lower()
             word_rus = word.get("word_rus", "").strip().lower()
             category = word.get("category", "").strip().lower()
             level = word.get("level", None)
@@ -25,16 +25,16 @@ async def import_words_from_json(json_path: str, db_params: dict) -> dict:
             other_rus2 = word.get("other_rus2")
             other_rus3 = word.get("other_rus3")
 
-            if not word_esp or not word_rus or not category:
+            if not word_src or not word_rus or not category:
                 errors.append(word)
                 continue
 
             # Проверка наличия слова
             existing = await conn.fetchrow("""
-                SELECT * FROM esp2rus_dictionary d
+                SELECT * FROM dictionary d
                 JOIN word_category c ON d.cat_id = c.cat_id
-                WHERE d.word_esp = $1
-            """, word_esp)
+                WHERE d.word_src = $1
+            """, word_src)
 
             if existing:
                 existing_category = existing["cat_name"].strip().lower()
@@ -68,12 +68,12 @@ async def import_words_from_json(json_path: str, db_params: dict) -> dict:
 
             # Добавление нового слова
             await conn.execute("""
-                INSERT INTO esp2rus_dictionary (word_esp, word_rus, cat_id, lev_id, other_rus1, other_rus2, other_rus3)
+                INSERT INTO dictionary (word_src, word_rus, cat_id, lev_id, other_rus1, other_rus2, other_rus3)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
-            """, word_esp, word_rus, cat_id, lev_id, other_rus1, other_rus2, other_rus3)
+            """, word_src, word_rus, cat_id, lev_id, other_rus1, other_rus2, other_rus3)
 
             added += 1
-            added_words.append(word_esp)
+            added_words.append(word_src)
 
         except Exception as e:
             errors.append({"word": word, "error": str(e)})

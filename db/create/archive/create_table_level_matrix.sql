@@ -1,22 +1,13 @@
-DROP TABLE IF EXISTS level_matrix;
-
-CREATE TABLE level_matrix (
-    level_id_client INT PRIMARY KEY REFERENCES study_levels(level_id),
-    level_client TEXT NOT NULL,
-    level_word TEXT NOT NULL,
-    lev_id INT NOT NULL REFERENCES table_study_level_mapped(lev_id),
-    min_coverage NUMERIC(5,2) NOT NULL,
-    min_accuracy NUMERIC(5,2) NOT NULL
-);
-
-INSERT INTO level_matrix (
-    level_id_client, level_client, level_word, lev_id, min_coverage, min_accuracy
-)
+CREATE OR REPLACE VIEW level_matrix AS
 SELECT
-    level_id,
-    level_client,
-    level_word,
-    lev_id,
-    CASE WHEN level_id % 2 = 0 THEN 100.00 ELSE 50.00 END,
-    100.00
-FROM table_study_level_mapped;
+  ROW_NUMBER() OVER (ORDER BY vslm.mapped_level_id) AS level_id_client,  -- ID для клиента
+  vslm.level_client AS cefr_id,                                           -- A1, A2, ..., C2
+  vslm.lev_name AS level_name,                                            -- начальный, средний, продвинутый
+  vslm.lev_id,                                                            -- ID уровня из study_level
+  CASE
+    WHEN vslm.mapped_level_id % 2 = 1 THEN 50.00
+    ELSE 100.00
+  END AS min_coverage,                                                    -- 50% для первой ступени, 100% для второй
+  100.00 AS min_accuracy                                                  -- Всегда 100%
+FROM view_study_level_mapped vslm
+ORDER BY vslm.mapped_level_id;

@@ -1,86 +1,64 @@
+# 📐 calculate_level_current.py — обновлённая логика присвоения CEFR уровня
 
-# 🧠 Матрица присвоения уровня (level_id_client) согласно CEFR:
-# 1 — A1: >= 50% слов уровня A1 с результатом 100%
-# 2 — A2: >= 100% слов уровня A1 с результатом 100%
-# 3 — B1: >= 50% слов уровня B с результатом 100%
-# 4 — B2: >= 100% слов уровня B с результатом 100%
-# 5 — C1: >= 50% слов уровня C с результатом 100%
-# 6 — C2: >= 100% слов уровня C с результатом 100%
-#
-# Важно: уровень присваивается только если пройдено необходимое количество слов с quiz_weight != NULL
+import asyncpg
 
-# Пример логики (в упрощённой форме, реализуется в коде ниже):
-# SELECT COUNT(*) FROM esp2rus_dictionary WHERE lev_id = 1;
-# SELECT COUNT(*) FROM client_activity_words JOIN ... WHERE lev_id = 1 AND score = 1.0;
+# 📌 Расчёт текущего уровня владения языком на основе прогресса
+# Прогресс (coverage) считается по таблице learned_words / dictionary
+# Уровень присваивается, если выполнены условия из level_matrix по coverage
+# Точность (accuracy) больше НЕ используется (исключена по решению от 2025-05-14)
 
-
-from asyncpg import Connection
-from datetime import datetime
-
-LEVEL_THRESHOLD_COVERAGE = 0.8  # ≥ 80% слов пройдено
-LEVEL_THRESHOLD_SCORE = 0.8     # ≥ 80% точность
-
-async def update_level_current(conn: Connection, client_id: int) -> None:
-    # Шаг 1: получаем охват и точность по каждому уровню клиента
-    query = """
-        SELECT
-            level_id_word,
-            COUNT(*) AS quizzes_passed,
-            SUM(score_quiz * quiz_weight) / NULLIF(SUM(quiz_weight), 0) AS avg_score
-        FROM client_activity_log
-        WHERE client_id = $1
-        GROUP BY level_id_word
-    """
-    level_stats = await conn.fetch(query, client_id)
-
-    if not level_stats:
-        print(f"[LEVEL] Нет данных по активности клиента {client_id}")
-        return
-
-    # Шаг 2: получаем общее количество слов по уровням
-    dictionary_totals = await conn.fetch("""
-        SELECT lev_id, COUNT(*) AS total_words
-        FROM esp2rus_dictionary
-        WHERE lev_id IS NOT NULL
-        GROUP BY lev_id
+async def calculate_level_current(conn: asyncpg.Connection, client_id: int) -> int | None:
+    # Получаем список всех уровней из матрицы
+    rows = await conn.fetch("""
+        SELECT level_id_client, lev_id, min_coverage
+        FROM level_matrix
+        ORDER BY level_id_client
     """)
 
-    total_words_map = {row["lev_id"]: row["total_words"] for row in dictionary_totals}
+    level_id_current = None
 
-    # Шаг 3: ищем максимальный уровень, где выполнены оба условия
-    qualified_levels = []
+    for row in rows:
+        level_id = row["level_id_client"]
+        lev_id = row["lev_id"]
+        min_coverage = row["min_coverage"]
 
-    for stat in level_stats:
-        level_id = stat["level_id_word"]
-        passed = stat["quizzes_passed"]
-        avg_score = float(stat["avg_score"] or 0.0)
-        total = total_words_map.get(level_id, 0)
+        # Получаем общее число слов и выученных слов по этому уровню
+        stats = await conn.fetchrow("""
+            SELECT
+                COUNT(*) AS total,
+                COUNT(lw.word_id) AS learned
+            FROM dictionary d
+            LEFT JOIN learned_words lw ON lw.word_id = d.word_id AND lw.client_id = $1
+            WHERE d.lev_id = $2
+        """, client_id, lev_id)
+
+        total = stats["total"] or 0
+        learned = stats["learned"] or 0
 
         if total == 0:
             continue
 
-        coverage_ratio = passed / total
+        coverage = round((learned / total) * 100, 2)
 
-        if coverage_ratio >= LEVEL_THRESHOLD_COVERAGE and avg_score >= LEVEL_THRESHOLD_SCORE:
-            qualified_levels.append(level_id)
+        print(f"[DEBUG] Клиент {client_id}: lev_id={lev_id}, coverage={coverage:.2f}%", end=" ")
 
-    if not qualified_levels:
-        print(f"[LEVEL] У клиента {client_id} пока нет завершённых уровней")
-        return
+        if coverage >= min_coverage:
+            level_id_current = level_id
+            print(
+                f"[DEBUG] Клиент {client_id}: lev_id={lev_id}, coverage={coverage:.2f}% ✅ присвоен уровень level_id={level_id}")
+        else:
+            print(
+                f"[DEBUG] Клиент {client_id}: lev_id={lev_id}, coverage={coverage:.2f}% ❌ недостаточно для уровня level_id={level_id}")
 
-    new_level_id = max(qualified_levels)
-
-    # Шаг 4: обновим client_analytics
-    await conn.execute(
-        """
+    # Обновляем уровень в client_analytics
+    await conn.execute("""
         UPDATE client_analytics
-        SET level_id_current = $1,
-            date_level_upgraded = $2
-        WHERE client_id = $3
-        """,
-        new_level_id,
-        datetime.utcnow(),
-        client_id
-    )
+        SET level_id_current = $2
+        WHERE client_id = $1
+    """, client_id, level_id_current)
 
-    print(f"[LEVEL] Клиент {client_id} достиг уровня {new_level_id}")
+    if level_id_current:
+        return level_id_current
+    else:
+        print(f"[DEBUG] Клиент client_id={client_id}: уровень не присвоен. Текущий уровень = 0")
+        return None
