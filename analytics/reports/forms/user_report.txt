@@ -1,0 +1,23 @@
+👤 {first_name} (@{username}) 🆔 {tg_id}
+
+🎁 Поздравляю, ты с нами уже {days_with_us} дней (с {reg_date})
+
+🏆 Твой рейтинг: {rating} баллов
+(#{rank} среди всех участников)
+
+🚀 Твой уровень знания {flag}: {level_display}
+({level_progress_percent}% пройдено)
+
+📅 Твой прогресс за {level_changed_days} дней:
+
+📚 Всего выучено {total_words} слов в {quiz_count} квизах
+
+в том числе:
+
+📊 слов по уровням сложности:
+{level_block}
+
+📈 слов по темам:
+{category_block}
+
+Продолжай в том же духе 💪
