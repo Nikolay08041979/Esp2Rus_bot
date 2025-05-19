@@ -13,15 +13,13 @@ env/
 
 # Data
 data/logs/*.log
-data/backup/sql/*
 data/uploads/*.csv
 data/json/*.json
+data/backup/*.sql
 
-*.sqlite3
+
 *.db
 *.bak
-*.json
-*.csv
 *.xlsx
 *.zip
 

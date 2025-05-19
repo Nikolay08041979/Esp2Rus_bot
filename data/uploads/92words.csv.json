@@ -1,0 +1,830 @@
+[
+    {
+        "word_src": "la falda",
+        "word_rus": "юбка",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "брюки",
+        "other_rus2": "платье",
+        "other_rus3": "шорты"
+    },
+    {
+        "word_src": "alegría",
+        "word_rus": "радость",
+        "category": "эмоции",
+        "level": "средний",
+        "other_rus1": "печаль",
+        "other_rus2": "злость",
+        "other_rus3": "спокойствие"
+    },
+    {
+        "word_src": "el tren",
+        "word_rus": "поезд",
+        "category": "транспорт",
+        "level": "начальный",
+        "other_rus1": "машина",
+        "other_rus2": "автобус",
+        "other_rus3": "метро"
+    },
+    {
+        "word_src": "los pantalones",
+        "word_rus": "брюки",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "штаны",
+        "other_rus2": "панталоны",
+        "other_rus3": "комбинезон"
+    },
+    {
+        "word_src": "la camisa",
+        "word_rus": "рубашка",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "блузка",
+        "other_rus2": "топ",
+        "other_rus3": "туника"
+    },
+    {
+        "word_src": "la camiseta",
+        "word_rus": "футболка",
+        "category": "одежда",
+        "level": "начальный",
+        "other_rus1": "майка",
+        "other_rus2": "лонгслив",
+        "other_rus3": "топ"
+    },
+    {
+        "word_src": "el vestido",
+        "word_rus": "платье",
+        "category": "одежда",
+        "level": "начальный",
+        "other_rus1": "туника",
+        "other_rus2": "комбинезон",
+        "other_rus3": "сарафан"
+    },
+    {
+        "word_src": "los pantalones cortos",
+        "word_rus": "шорты",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "бермуды",
+        "other_rus2": "плавки",
+        "other_rus3": "бриджи"
+    },
+    {
+        "word_src": "el abrigo",
+        "word_rus": "пальто",
+        "category": "одежда",
+        "level": "продвинутый",
+        "other_rus1": "плащ",
+        "other_rus2": "куртка",
+        "other_rus3": "накидка"
+    },
+    {
+        "word_src": "la chaqueta",
+        "word_rus": "пиджак",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "жакет",
+        "other_rus2": "блейзер",
+        "other_rus3": "куртка"
+    },
+    {
+        "word_src": "el jersey",
+        "word_rus": "свитер",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "джемпер",
+        "other_rus2": "толстовка",
+        "other_rus3": "водолазка"
+    },
+    {
+        "word_src": "la bufanda",
+        "word_rus": "шарф",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "платок",
+        "other_rus2": "горжетка",
+        "other_rus3": "накидка"
+    },
+    {
+        "word_src": "el sombrero",
+        "word_rus": "шляпа",
+        "category": "одежда",
+        "level": "начальный",
+        "other_rus1": "панама",
+        "other_rus2": "берет",
+        "other_rus3": "кепка"
+    },
+    {
+        "word_src": "el traje",
+        "word_rus": "костюм",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "комплект",
+        "other_rus2": "ансамбль",
+        "other_rus3": "форма"
+    },
+    {
+        "word_src": "los calcetines",
+        "word_rus": "носки",
+        "category": "одежда",
+        "level": "начальный",
+        "other_rus1": "гольфы",
+        "other_rus2": "чулки",
+        "other_rus3": "следки"
+    },
+    {
+        "word_src": "los zapatos",
+        "word_rus": "ботинки",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "сапоги",
+        "other_rus2": "туфли",
+        "other_rus3": "кроссовки"
+    },
+    {
+        "word_src": "las zapatillas de casa",
+        "word_rus": "тапки",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "домашние_туфли",
+        "other_rus2": "шлепанцы",
+        "other_rus3": "сланцы"
+    },
+    {
+        "word_src": "las botas",
+        "word_rus": "сапоги",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "ботфорты",
+        "other_rus2": "валенки",
+        "other_rus3": "ботинки"
+    },
+    {
+        "word_src": "las zapatillas de deporte",
+        "word_rus": "кроссовки",
+        "category": "одежда",
+        "level": "начальный",
+        "other_rus1": "кеды",
+        "other_rus2": "слипоны",
+        "other_rus3": "кроссы"
+    },
+    {
+        "word_src": "los guantes",
+        "word_rus": "перчатки",
+        "category": "одежда",
+        "level": "продвинутый",
+        "other_rus1": "варежки",
+        "other_rus2": "рукавицы",
+        "other_rus3": "митенки"
+    },
+    {
+        "word_src": "los calzoncillos",
+        "word_rus": "нижнее бельё (мужское)",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "трусы",
+        "other_rus2": "боксеры",
+        "other_rus3": "плавки"
+    },
+    {
+        "word_src": "las bragas",
+        "word_rus": "нижнее бельё (женское)",
+        "category": "одежда",
+        "level": "средний",
+        "other_rus1": "лифчик",
+        "other_rus2": "трусы",
+        "other_rus3": "боди"
+    },
+    {
+        "word_src": "el humano",
+        "word_rus": "человек",
+        "category": "животные",
+        "level": "начальный",
+        "other_rus1": "личность",
+        "other_rus2": "индивид",
+        "other_rus3": "существо"
+    },
+    {
+        "word_src": "el perro",
+        "word_rus": "собака",
+        "category": "животные",
+        "level": "начальный",
+        "other_rus1": "пёс",
+        "other_rus2": "щенок",
+        "other_rus3": "псина"
+    },
+    {
+        "word_src": "el gato",
+        "word_rus": "кошка",
+        "category": "животные",
+        "level": "начальный",
+        "other_rus1": "кот",
+        "other_rus2": "котёнок",
+        "other_rus3": "пушистик"
+    },
+    {
+        "word_src": "el pájaro",
+        "word_rus": "птица",
+        "category": "животные",
+        "level": "начальный",
+        "other_rus1": "пташка",
+        "other_rus2": "пернатое",
+        "other_rus3": "воробей"
+    },
+    {
+        "word_src": "el pez",
+        "word_rus": "рыба",
+        "category": "животные",
+        "level": "средний",
+        "other_rus1": "рыбка",
+        "other_rus2": "окунь",
+        "other_rus3": "карась"
+    },
+    {
+        "word_src": "el conejo",
+        "word_rus": "кролик",
+        "category": "животные",
+        "level": "средний",
+        "other_rus1": "заяц",
+        "other_rus2": "зверёк",
+        "other_rus3": "питомец"
+    },
+    {
+        "word_src": "la serpiente",
+        "word_rus": "змея",
+        "category": "животные",
+        "level": "средний",
+        "other_rus1": "гадюка",
+        "other_rus2": "уж",
+        "other_rus3": "рептилия"
+    },
+    {
+        "word_src": "el león",
+        "word_rus": "лев",
+        "category": "животные",
+        "level": "начальный",
+        "other_rus1": "царь_зверей",
+        "other_rus2": "хищник",
+        "other_rus3": "барс"
+    },
+    {
+        "word_src": "el elefante",
+        "word_rus": "слон",
+        "category": "животные",
+        "level": "начальный",
+        "other_rus1": "гигант",
+        "other_rus2": "животное",
+        "other_rus3": "тяжеловес"
+    },
+    {
+        "word_src": "el caballo",
+        "word_rus": "лошадь",
+        "category": "животные",
+        "level": "начальный",
+        "other_rus1": "конь",
+        "other_rus2": "пегас",
+        "other_rus3": "жеребец"
+    },
+    {
+        "word_src": "la oveja",
+        "word_rus": "овца",
+        "category": "животные",
+        "level": "средний",
+        "other_rus1": "ягнёнок",
+        "other_rus2": "баран",
+        "other_rus3": "животное"
+    },
+    {
+        "word_src": "el mono",
+        "word_rus": "обезьяна",
+        "category": "животные",
+        "level": "средний",
+        "other_rus1": "примат",
+        "other_rus2": "шимпанзе",
+        "other_rus3": "мартышка"
+    },
+    {
+        "word_src": "el perrito",
+        "word_rus": "щенок",
+        "category": "животные",
+        "level": "средний",
+        "other_rus1": "собачка",
+        "other_rus2": "малютка",
+        "other_rus3": "питомец"
+    },
+    {
+        "word_src": "el gatito",
+        "word_rus": "котёнок",
+        "category": "животные",
+        "level": "средний",
+        "other_rus1": "кошечка",
+        "other_rus2": "малыш",
+        "other_rus3": "пушистик"
+    },
+    {
+        "word_src": "la jirafa",
+        "word_rus": "жираф",
+        "category": "животные",
+        "level": "начальный",
+        "other_rus1": "длинношеее",
+        "other_rus2": "животное",
+        "other_rus3": "травоядное"
+    },
+    {
+        "word_src": "el burro",
+        "word_rus": "осёл",
+        "category": "животные",
+        "level": "продвинутый",
+        "other_rus1": "ишак",
+        "other_rus2": "животное",
+        "other_rus3": "тягловая_скотина"
+    },
+    {
+        "word_src": "el ratón",
+        "word_rus": "мышь",
+        "category": "животные",
+        "level": "продвинутый",
+        "other_rus1": "грызун",
+        "other_rus2": "крыса",
+        "other_rus3": "питомец"
+    },
+    {
+        "word_src": "el brazo",
+        "word_rus": "рука",
+        "category": "части тела",
+        "level": "начальный",
+        "other_rus1": "кисть",
+        "other_rus2": "ладонь",
+        "other_rus3": "конечность"
+    },
+    {
+        "word_src": "la pierna",
+        "word_rus": "нога",
+        "category": "части тела",
+        "level": "начальный",
+        "other_rus1": "ступня",
+        "other_rus2": "конечность",
+        "other_rus3": "бедро"
+    },
+    {
+        "word_src": "la fruta",
+        "word_rus": "фрукт",
+        "category": "овощи и фрукты",
+        "level": "начальный",
+        "other_rus1": "ягода",
+        "other_rus2": "плод",
+        "other_rus3": "лакомство"
+    },
+    {
+        "word_src": "la verdura",
+        "word_rus": "овощи",
+        "category": "овощи и фрукты",
+        "level": "начальный",
+        "other_rus1": "зелень",
+        "other_rus2": "плоды",
+        "other_rus3": "овощные_культуры"
+    },
+    {
+        "word_src": "la patata",
+        "word_rus": "картошка",
+        "category": "овощи и фрукты",
+        "level": "начальный",
+        "other_rus1": "картофель",
+        "other_rus2": "клубень",
+        "other_rus3": "овощ"
+    },
+    {
+        "word_src": "la ensalada",
+        "word_rus": "салат",
+        "category": "овощи и фрукты",
+        "level": "начальный",
+        "other_rus1": "зелень",
+        "other_rus2": "закуска",
+        "other_rus3": "смесь"
+    },
+    {
+        "word_src": "el autobús",
+        "word_rus": "автобус",
+        "category": "транспорт",
+        "level": "начальный",
+        "other_rus1": "маршрутка",
+        "other_rus2": "автофургон",
+        "other_rus3": "троллейбус"
+    },
+    {
+        "word_src": "el taxi",
+        "word_rus": "такси",
+        "category": "транспорт",
+        "level": "начальный",
+        "other_rus1": "таксомотор",
+        "other_rus2": "машина",
+        "other_rus3": "транспорт"
+    },
+    {
+        "word_src": "la casa",
+        "word_rus": "дом",
+        "category": "дом и быт",
+        "level": "начальный",
+        "other_rus1": "жилище",
+        "other_rus2": "коттедж",
+        "other_rus3": "здание"
+    },
+    {
+        "word_src": "el piso",
+        "word_rus": "квартира; этаж",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "апартаменты",
+        "other_rus2": "жильё",
+        "other_rus3": "помещение"
+    },
+    {
+        "word_src": "el balcón",
+        "word_rus": "балкон",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "терраса",
+        "other_rus2": "лоджия",
+        "other_rus3": "веранда"
+    },
+    {
+        "word_src": "la planta",
+        "word_rus": "растение",
+        "category": "природа",
+        "level": "начальный",
+        "other_rus1": "цветок",
+        "other_rus2": "зелень",
+        "other_rus3": "дерево"
+    },
+    {
+        "word_src": "el salón",
+        "word_rus": "гостиная",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "зал",
+        "other_rus2": "комната",
+        "other_rus3": "приёмная"
+    },
+    {
+        "word_src": "el sofá",
+        "word_rus": "диван",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "софа",
+        "other_rus2": "канапе",
+        "other_rus3": "лежак"
+    },
+    {
+        "word_src": "el dormitorio",
+        "word_rus": "спальня",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "комната",
+        "other_rus2": "опочивальня",
+        "other_rus3": "будуар"
+    },
+    {
+        "word_src": "el árbol",
+        "word_rus": "дерево",
+        "category": "природа",
+        "level": "начальный",
+        "other_rus1": "растение",
+        "other_rus2": "дуб",
+        "other_rus3": "сосна"
+    },
+    {
+        "word_src": "la habitación",
+        "word_rus": "комната",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "помещение",
+        "other_rus2": "кабинет",
+        "other_rus3": "палата"
+    },
+    {
+        "word_src": "el baño",
+        "word_rus": "туалет; ванная комната",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "уборная",
+        "other_rus2": "санузел",
+        "other_rus3": "душевая"
+    },
+    {
+        "word_src": "la cocina",
+        "word_rus": "кухня; печка",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "кухонное_помещение",
+        "other_rus2": "плита",
+        "other_rus3": "место_готовки"
+    },
+    {
+        "word_src": "el horno",
+        "word_rus": "духовка",
+        "category": "дом и быт",
+        "level": "средний",
+        "other_rus1": "печь",
+        "other_rus2": "жаровня",
+        "other_rus3": "шкаф"
+    },
+    {
+        "word_src": "el microondas",
+        "word_rus": "микроволновка",
+        "category": "дом и быт",
+        "level": "продвинутый",
+        "other_rus1": "микроволновая_печь",
+        "other_rus2": "разогреватель",
+        "other_rus3": "печка"
+    },
+    {
+        "word_src": "la nevera",
+        "word_rus": "холодильник",
+        "category": "дом и быт",
+        "level": "продвинутый",
+        "other_rus1": "морозильник",
+        "other_rus2": "камера",
+        "other_rus3": "рефрижератор"
+    },
+    {
+        "word_src": "el jardín",
+        "word_rus": "сад",
+        "category": "природа",
+        "level": "средний",
+        "other_rus1": "огород",
+        "other_rus2": "парк",
+        "other_rus3": "сквер"
+    },
+    {
+        "word_src": "el camarero",
+        "word_rus": "официант",
+        "category": "профессии",
+        "level": "средний",
+        "other_rus1": "обслуживающий",
+        "other_rus2": "подающий",
+        "other_rus3": "работник"
+    },
+    {
+        "word_src": "la camarera",
+        "word_rus": "официантка",
+        "category": "профессии",
+        "level": "средний",
+        "other_rus1": "подающая",
+        "other_rus2": "обслуживающая",
+        "other_rus3": "работница"
+    },
+    {
+        "word_src": "el periodista",
+        "word_rus": "журналист",
+        "category": "профессии",
+        "level": "средний",
+        "other_rus1": "репортёр",
+        "other_rus2": "корреспондент",
+        "other_rus3": "писатель"
+    },
+    {
+        "word_src": "la periodista",
+        "word_rus": "журналистка",
+        "category": "профессии",
+        "level": "средний",
+        "other_rus1": "репортёрша",
+        "other_rus2": "корреспондентка",
+        "other_rus3": "писательница"
+    },
+    {
+        "word_src": "el médico",
+        "word_rus": "врач",
+        "category": "профессии",
+        "level": "начальный",
+        "other_rus1": "доктор",
+        "other_rus2": "эскулап",
+        "other_rus3": "медик"
+    },
+    {
+        "word_src": "la médica",
+        "word_rus": "врач",
+        "category": "профессии",
+        "level": "начальный",
+        "other_rus1": "доктор",
+        "other_rus2": "эскулап",
+        "other_rus3": "медик"
+    },
+    {
+        "word_src": "el psicólogo",
+        "word_rus": "психолог",
+        "category": "профессии",
+        "level": "средний",
+        "other_rus1": "психотерапевт",
+        "other_rus2": "консультант",
+        "other_rus3": "аналитик"
+    },
+    {
+        "word_src": "la psicóloga",
+        "word_rus": "психолог",
+        "category": "профессии",
+        "level": "средний",
+        "other_rus1": "психотерапевт",
+        "other_rus2": "консультант",
+        "other_rus3": "аналитик"
+    },
+    {
+        "word_src": "el dentista",
+        "word_rus": "зубной врач",
+        "category": "профессии",
+        "level": "начальный",
+        "other_rus1": "стоматолог",
+        "other_rus2": "дантист",
+        "other_rus3": "ортодонт"
+    },
+    {
+        "word_src": "la dentista",
+        "word_rus": "зубной врач",
+        "category": "профессии",
+        "level": "начальный",
+        "other_rus1": "стоматолог",
+        "other_rus2": "дантист",
+        "other_rus3": "ортодонт"
+    },
+    {
+        "word_src": "el profesor",
+        "word_rus": "учитель",
+        "category": "профессии",
+        "level": "начальный",
+        "other_rus1": "педагог",
+        "other_rus2": "преподаватель",
+        "other_rus3": "наставник"
+    },
+    {
+        "word_src": "la profesora",
+        "word_rus": "учительница",
+        "category": "профессии",
+        "level": "начальный",
+        "other_rus1": "педагог",
+        "other_rus2": "преподавательница",
+        "other_rus3": "наставница"
+    },
+    {
+        "word_src": "el escritor",
+        "word_rus": "писатель",
+        "category": "профессии",
+        "level": "средний",
+        "other_rus1": "автор",
+        "other_rus2": "литератор",
+        "other_rus3": "сочинитель"
+    },
+    {
+        "word_src": "la escritora",
+        "word_rus": "писательница",
+        "category": "профессии",
+        "level": "средний",
+        "other_rus1": "авторша",
+        "other_rus2": "литераторша",
+        "other_rus3": "сочинительница"
+    },
+    {
+        "word_src": "bailar",
+        "word_rus": "танцевать",
+        "category": "глаголы действия",
+        "level": "начальный",
+        "other_rus1": "плясать",
+        "other_rus2": "кружиться",
+        "other_rus3": "вихляться"
+    },
+    {
+        "word_src": "ir a bailar",
+        "word_rus": "пойти танцевать",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "плясать",
+        "other_rus2": "двигаться",
+        "other_rus3": "танцевать"
+    },
+    {
+        "word_src": "nadar",
+        "word_rus": "плавать",
+        "category": "глаголы действия",
+        "level": "начальный",
+        "other_rus1": "нырять",
+        "other_rus2": "барахтаться",
+        "other_rus3": "дрейфовать"
+    },
+    {
+        "word_src": "ir a nadar",
+        "word_rus": "пойти плавать",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "купаться",
+        "other_rus2": "нырять",
+        "other_rus3": "плавать"
+    },
+    {
+        "word_src": "andar",
+        "word_rus": "гулять; ходить",
+        "category": "глаголы действия",
+        "level": "начальный",
+        "other_rus1": "прогуливаться",
+        "other_rus2": "бродить",
+        "other_rus3": "ходить"
+    },
+    {
+        "word_src": "ir de paseo",
+        "word_rus": "пойти на прогулку",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "выгуливаться",
+        "other_rus2": "прохаживаться",
+        "other_rus3": "прогуливаться"
+    },
+    {
+        "word_src": "correr",
+        "word_rus": "бегать",
+        "category": "глаголы действия",
+        "level": "начальный",
+        "other_rus1": "спринтовать",
+        "other_rus2": "мчаться",
+        "other_rus3": "ускоряться"
+    },
+    {
+        "word_src": "ir a correr",
+        "word_rus": "пойти на пробежку",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "побежать",
+        "other_rus2": "устроить_забег",
+        "other_rus3": "устроить_тренировку"
+    },
+    {
+        "word_src": "salir",
+        "word_rus": "выходить; тусоваться",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "развлекаться",
+        "other_rus2": "гулять",
+        "other_rus3": "веселиться"
+    },
+    {
+        "word_src": "salir a comer",
+        "word_rus": "пойти (куда-либо) на обед",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "пообедать",
+        "other_rus2": "сходить_на_ланч",
+        "other_rus3": "перекусить"
+    },
+    {
+        "word_src": "salir a cenar",
+        "word_rus": "пойти (куда-либо) на ужин",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "поужинать",
+        "other_rus2": "поесть",
+        "other_rus3": "сходить_в_ресторан"
+    },
+    {
+        "word_src": "dormir",
+        "word_rus": "спать",
+        "category": "глаголы действия",
+        "level": "начальный",
+        "other_rus1": "дремать",
+        "other_rus2": "покемарить",
+        "other_rus3": "засыпать"
+    },
+    {
+        "word_src": "quedarse",
+        "word_rus": "оставаться",
+        "category": "глаголы действия",
+        "level": "продвинутый",
+        "other_rus1": "задерживаться",
+        "other_rus2": "дожидаться",
+        "other_rus3": "находиться"
+    },
+    {
+        "word_src": "quedarse despierto",
+        "word_rus": "не ложиться спать",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "бодрствовать",
+        "other_rus2": "не_засыпать",
+        "other_rus3": "ночевать"
+    },
+    {
+        "word_src": "quedarse dormido",
+        "word_rus": "спать; заснуть",
+        "category": "глаголы действия",
+        "level": "средний",
+        "other_rus1": "дремать",
+        "other_rus2": "уснуть",
+        "other_rus3": "засыпать"
+    },
+    {
+        "word_src": "irse a casa",
+        "word_rus": "идти домой",
+        "category": "глаголы действия",
+        "level": "начальный",
+        "other_rus1": "направляться",
+        "other_rus2": "возвращаться",
+        "other_rus3": "брести"
+    }
+]

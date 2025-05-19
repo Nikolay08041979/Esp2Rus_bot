@@ -3,7 +3,6 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
-*.sqlite3
 .env
 .idea/
 .vscode/
@@ -11,3 +10,5 @@ __pycache__/
 *.xlsx
 *.csv
 venv/
+
+!backup_7_tables.sql

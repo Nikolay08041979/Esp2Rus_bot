@@ -35,9 +35,16 @@ jobs:
           echo "📦 Клонируем репозиторий заново"
           git clone --depth=1 https://github.com/Nikolay08041979/Esp2Rus_bot.git
           cd Esp2Rus_bot
+          
+          echo "📄 Создаём .env файл"
+          cp .env.example .env
+          echo "⚠️ Не забудь вручную обновить .env на сервере перед запуском!"
 
           echo "🚀 Запускаем новый проект"
           docker compose up -d --build
+          
+          echo "🔁 Обновляем таблицы и метрики"
+          docker compose exec esp2ru_app python run_install.py --sync
 
           echo "✅ Деплой завершён успешно"
 

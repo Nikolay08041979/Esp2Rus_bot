@@ -1,21 +1,25 @@
--- Показывает прогресс пользователя по темам и уровням
-CREATE OR REPLACE VIEW view_user_progress_by_theme AS
+-- 🔄 Обновление VIEW: view_user_progress_by_theme
+-- Показывает прогресс пользователя по темам (без учёта уровня)
+CREATE VIEW view_user_progress_by_theme AS
 SELECT
-  u.client_id,                 -- ID пользователя
-  u.cat_id,                    -- ID темы
-  u.level_id,                  -- ID уровня сложности
-  wc.cat_name,                 -- Название темы (человеко-читаемое)
-  sl.lev_name,                 -- Название уровня (например, "начальный")
-  u.total_words,               -- Общее число слов в теме
-  u.learned_words,             -- Сколько из них уже выучено
-  u.percent_done,              -- Процент выполнения темы (0.00–1.00)
-  u.updated_at                 -- Дата последнего обновления
-FROM user_progress_by_theme u
-JOIN word_category wc ON u.cat_id = wc.cat_id
-JOIN study_level sl ON u.level_id = sl.lev_id;
+    c.client_id,
+    cat.cat_id,
+    cat.cat_name,
+    COUNT(*) FILTER (WHERE d.word_id IS NOT NULL) AS total_words,
+    COUNT(lw.word_id) AS learned_words,
+    ROUND(
+        COUNT(lw.word_id) * 100.0 / NULLIF(COUNT(*) FILTER (WHERE d.word_id IS NOT NULL), 0),
+        2
+    ) AS percent_done,
+    CURRENT_DATE AS updated_at
+FROM dictionary d
+JOIN word_category cat ON d.cat_id = cat.cat_id
+CROSS JOIN (SELECT DISTINCT client_id FROM learned_words) c
+LEFT JOIN learned_words lw ON lw.word_id = d.word_id AND lw.client_id = c.client_id
+GROUP BY c.client_id, cat.cat_id, cat.cat_name;
 
 
--- 📌 Этот VIEW:
+
 -- используется в админ-панели и пользовательской статистике
 -- объединяет user_progress_by_theme с текстами тем и уровней
 -- даёт читаемый и готовый к отчётам формат
