@@ -10,7 +10,7 @@
 * `docs/` — документация
 * `tests/` — автотесты и симуляции
 
-📌 *См. схему [schema_release_v2.1.0](/docs/images/schema_release_v2.png)*
+📌 *См. схему [schema_release_v2.1.0](/docs/images/schema_v2.1.0.png)*
 
 ---
 
