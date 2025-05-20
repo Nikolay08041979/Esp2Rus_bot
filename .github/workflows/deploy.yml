@@ -49,7 +49,7 @@ jobs:
           docker compose up -d --build
           
           echo "🔁 Инициализация и пересчёт аналитики"
-          docker compose exec esp2ru_bot python run_install.py --sync
-        
+          docker compose exec esp2rus_bot python run_install.py --sync
+          
           echo "✅ Деплой завершён успешно"
 
