@@ -2,7 +2,12 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-load_dotenv()
+# Принудительно загружаем .env из корня проекта
+env_path = Path(__file__).resolve().parent.parent / '.env'
+if not env_path.exists():
+    raise RuntimeError(f"❌ .env файл не найден по пути: {env_path}")
+load_dotenv(dotenv_path=env_path)
+
 
 # === Определение среды ===
 ENV_MODE = os.getenv("ENV_MODE", "prod")

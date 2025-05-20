@@ -1,6 +1,8 @@
 #!/bin/bash
 
-DB_NAME="esp2rus_restore"
+# Используется вручную в случае аварийного восстановления
+
+DB_NAME="esp2rus"
 DUMP_FILE="backup_7_tables.sql"
 
 # Создать БД, если её нет

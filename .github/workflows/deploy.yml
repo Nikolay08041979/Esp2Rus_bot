@@ -19,6 +19,9 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
+
+        envs: DB_PASSWORD,BOT_TOKEN_PROD,ADMIN_IDS
+
         script: |
           echo "🚧 Останавливаем и удаляем старый проект"
           cd /root
@@ -36,15 +39,17 @@ jobs:
           git clone --depth=1 https://github.com/Nikolay08041979/Esp2Rus_bot.git
           cd Esp2Rus_bot
           
-          echo "📄 Создаём .env файл"
-          cp .env.example .env
-          echo "⚠️ Не забудь вручную обновить .env на сервере перед запуском!"
-
+          echo "🧩 Генерируем .env из secrets"
+          bash generate_env.sh
+          
+          echo "💾 Делаем бэкап прод-таблиц"
+          bash backup_before_deploy.sh
+          
           echo "🚀 Запускаем новый проект"
           docker compose up -d --build
           
-          echo "🔁 Обновляем таблицы и метрики"
-          docker compose exec esp2ru_app python run_install.py --sync
-
+          echo "🔁 Инициализация и пересчёт аналитики"
+          docker compose exec esp2ru_bot python run_install.py --sync
+        
           echo "✅ Деплой завершён успешно"
 
