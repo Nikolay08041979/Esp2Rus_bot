@@ -86,6 +86,6 @@
 
 ### 📂 Дополнительно
 
-* [📦 Миграция на прод](README_Prod_Migration.md)
+* [📦 Миграция на прод](prod_migration.md)
 * [⚙️ Архитектура и взаимодействие модулей](architecture.md)
 * [🐛 Troubleshooting и FAQ](troubleshooting.md)

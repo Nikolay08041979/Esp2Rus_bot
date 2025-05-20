@@ -226,7 +226,7 @@ docker-compose down
 
 ### 8. Сопутствующие документы
 
-* [admin_manual.md](./admin_manual.md)
-* [README_release_v2.md](./README_release_v2.md)
-* [architecture.md](./architecture.md)
-* [troubleshooting.md](./troubleshooting.md)
+* [admin_manual.md](admin_manual.md)
+* [README_release_v2.md](release_v2.md)
+* [architecture.md](architecture.md)
+* [troubleshooting.md](troubleshooting.md)

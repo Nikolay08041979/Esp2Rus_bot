@@ -38,11 +38,8 @@ python main.py
 * [📦 Миграция на прод](docs/prod_migration.md)
 * [🛠 Админ-команды и шаблоны](docs/admin_manual.md)
 * [⚙️ Архитектура и взаимодействие модулей](docs/architecture.md)
+* [🚀 Roadmap](docs/roadmap.md)
 * [🐛 Отладка и FAQ](docs/troubleshooting.md)
-
-## 💡 Контрибьютинг
-
-Хочешь присоединиться? Прочитай [CONTRIBUTING.md](docs/contributing.md) и [issue tracker](https://github.com/username/Esp2Rus_bot/issues).
 
 ---
 
